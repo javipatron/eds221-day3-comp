@@ -1,0 +1,132 @@
+---
+title: "Penguins Check"
+format: html
+editor: visual
+---
+
+```{r}
+library(tidyverse)
+library(palmerpenguins)
+library(dplyr)
+```
+
+```{r}
+
+vector <- seq_along(penguins)
+vector
+
+for (i in seq_along(penguins)) {
+  if (is.numeric(penguins[[i]] )) {
+    penguin_med <- median(penguins[[i]], na.rm = TRUE)
+    print(penguin_med)
+  }
+}
+```
+
+### `group_by() %>% summarize()`
+
+# explication of `group_by` & `summarize()`
+
+```{r}
+penguins |> 
+  group_by(species, island) |> 
+  summarize(count1 = n(),
+            mean_bill_length = mean(bill_length_mm, na.rm = TRUE),
+            sd_bill_length = sd(bill_length_mm, na.rm = TRUE),
+            count2 = n())
+
+```
+
+# FIND THE MEAN AND SD OF CHARACTER HEIGHT IN THE `STARWARS`, GROUPED BY HOMEWORLD
+
+```{r}
+
+head(starwars)
+
+starwars |> 
+  group_by(homeworld) |> 
+  summarize(mean_height = mean(height, na.rm = TRUE))
+
+```
+
+# Find the max, min flipper length, and sample size for each species of penguins
+
+```{r}
+penguins |> 
+  group_by(species) |> 
+  summarize(max = max(flipper_length_mm, na.rm = TRUE),
+            min = min(flipper_length_mm, na.rm = TRUE))
+
+
+penguins |>
+  group_by(species) |> 
+  summarize(across(where(is.numeric), mean, na.rm = TRUE))
+
+```
+
+### Loops
+
+```{r}
+tree_height <- c(1,2,6,10,14,20)
+
+for (i in seq_along(tree_height)) {
+  val = tree_height[i] + tree_height[i + 1]
+  tree_height[val]
+}
+
+```
+
+### For loops with conditional statements
+
+```{r}
+
+dogs <- 7
+elephants <- 0.8
+goats <- 4.7
+animal_ages <- vector(mode = "numeric", length = length(species))
+
+species <- c("dog", "elephant", "goat", "dog", "dog", "elephant")
+age_human <- c(3,8,4,6,12,18)
+
+for (i in seq_along(species)) {
+  if (species[i] == "dog") {
+    animal_age <- age_human[i] * dogs
+  }
+  else if (species[i] == "elephant") {
+    animal_age <- age_human[i] * elephants
+  }
+  else if (species[i] =="goat") {
+    animal_age <- age_human[i] * goats
+  }
+  animal_age[i] <- animal_age
+}
+
+animal_age
+```
+
+### For loops across data frames
+
+```{r}
+
+mean_mtcars <- vector(mode="numeric", length = ncol(mtcars))
+
+for (i in seq_along(mtcars)) {
+  mean_val <- mean(mtcars[[i]], na.mr = TRUE)
+  mean_mtcars[i] <- mean_val
+  }
+
+mean_mtcars
+```
+
+### Funciotnal programming examples
+
+# Adding syntactic suger (apply, across, map_df)
+
+```{r}
+apply(mtcars, 2, mean)
+
+```
+
+```{r}
+map(.x = mtcars, .f = mean)
+```
